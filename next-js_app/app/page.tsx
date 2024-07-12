@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     console.log('call');
     axios.get(apiUrl.apiDev + 'users').then(res => {
-      console.log(res,'res')
+      console.log(res,'12331132123')
     })
   },[])
 
