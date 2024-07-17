@@ -1,15 +1,15 @@
-'use client';
-import axios from 'axios';
-import Image from 'next/image';
-import {useEffect, useState} from 'react';
-import {apiUrl} from '../settings/index';
-import api from './config';
-import ModalAddEdit from './ModalAddEdit';
-import {Button, message, Modal, Table} from 'antd';
-import {MouseEventHandler} from 'react';
-import {errorMessage, successMessage} from '../utility';
-import {Upload,UploadProps} from 'antd';
-import {UploadOutlined} from '@ant-design/icons'
+"use client";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { apiUrl } from "../settings/index";
+import api from "./config";
+import ModalAddEdit from "./ModalAddEdit";
+import { Button, message, Modal, Table } from "antd";
+import { MouseEventHandler } from "react";
+import { errorMessage, successMessage } from "../utility";
+import { Upload, UploadProps } from "antd";
+import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 
 interface ModalAddEdit {
   visibleModalAddEdit?: boolean;
@@ -30,14 +30,15 @@ export default function Home() {
     keyModalAddEdit: 0,
   });
   const [ListUser, setListUser] = useState([]);
-  const {visibleModalAddEdit, dataAddEdit, keyModalAddEdit} = dataModalAddEdit;
+  const { visibleModalAddEdit, dataAddEdit, keyModalAddEdit } =
+    dataModalAddEdit;
 
   useEffect(() => {
     reloadUser();
   }, []);
 
   const changeDataModalAddEdit = (data: ModalAddEdit) => {
-    setDataModalAddEdit((prevState) => ({...prevState, ...data}));
+    setDataModalAddEdit((prevState) => ({ ...prevState, ...data }));
   };
 
   const reloadUser = () => {
@@ -51,17 +52,26 @@ export default function Home() {
     });
   };
 
+  const handleDowloadFile = () => {
+    api.dowloadFile().then((res) => {
+      if (res.data.Status === 1) {
+        console.log(res, "res");
+      } else {
+        errorMessage(res.data.Message);
+      }
+    });
+  };
   const showModalAddEdit = (id?: number) => {
     const newKeyModalAddEdit = dataModalAddEdit.keyModalAddEdit ?? 0;
     if (id) {
       api
-        .getInfoUser({id})
+        .getInfoUser({ id })
         .then((res) => {
           if (res.data.Status > 0) {
-            console.log(res.data, 'res.data');
+            console.log(res.data, "res.data");
             changeDataModalAddEdit({
               visibleModalAddEdit: true,
-              dataAddEdit: {...res.data.Data},
+              dataAddEdit: { ...res.data.Data },
               keyModalAddEdit: newKeyModalAddEdit + 1,
             });
           } else {
@@ -72,7 +82,7 @@ export default function Home() {
           errorMessage(err.toString());
         });
     } else {
-      changeDataModalAddEdit({visibleModalAddEdit: true, dataAddEdit: {}});
+      changeDataModalAddEdit({ visibleModalAddEdit: true, dataAddEdit: {} });
     }
   };
 
@@ -119,11 +129,11 @@ export default function Home() {
 
   const deleteUser = (id: number) => {
     Modal.confirm({
-      title: 'Xóa người dùng',
-      content: 'Bạn có chắc chắn muốn xóa người dùng này không',
+      title: "Xóa người dùng",
+      content: "Bạn có chắc chắn muốn xóa người dùng này không",
       onOk: () => {
         api
-          .deleteUser({id})
+          .deleteUser({ id })
           .then((res) => {
             if (res.data.Status > 0) {
               successMessage(res.data.Message);
@@ -139,24 +149,24 @@ export default function Home() {
     });
   };
 
-  const columns = [
+  const columns: any = [
     {
-      title: 'Tên người dùng',
-      dataIndex: 'name',
-      key: 'name',
-      width: '50%',
+      title: "Tên người dùng",
+      dataIndex: "name",
+      key: "name",
+      width: "50%",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-      width: '30%',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      width: "30%",
     },
     {
-      title: 'Thao tác',
-      key: 'action',
-      align: 'center',
-      width: '20%',
+      title: "Thao tác",
+      key: "action",
+      align: "center",
+      width: "20%",
       render: (text: string, record: DataUser, index: number) => (
         <div className="flex  justify-around">
           <Button type="primary" onClick={() => showModalAddEdit(record.id)}>
@@ -170,28 +180,30 @@ export default function Home() {
     },
   ];
 
-  const uploadFile = (file : Blob) => {
-    const formData = new FormData()
-    if(file){
-      formData.append('file',file)
+  const uploadFile = (file: Blob) => {
+    const formData = new FormData();
+    if (file) {
+      formData.append("file", file);
     }
-    api.uploadFile(formData).then((res) => {
-      if (res.data.Status > 0) {
-        successMessage(res.data.Message);
-        reloadUser();
-      } else {
-        errorMessage(res.data.Message);
-      }
-    })
-    .catch((err) => {
-      errorMessage(err.toString());
-    });
-  }
+    api
+      .uploadFile(formData)
+      .then((res) => {
+        if (res.data.Status > 0) {
+          successMessage(res.data.Message);
+          reloadUser();
+        } else {
+          errorMessage(res.data.Message);
+        }
+      })
+      .catch((err) => {
+        errorMessage(err.toString());
+      });
+  };
 
   const props: UploadProps = {
-    action: 'false',
+    action: "false",
     beforeUpload(file) {
-      uploadFile(file)
+      uploadFile(file);
     },
 
     fileList: [],
@@ -208,13 +220,16 @@ export default function Home() {
         >
           Thêm người dùng
         </Button>
+        <Button icon={<DownloadOutlined />} onClick={() => handleDowloadFile()}>
+          Download File mẫu
+        </Button>
         <Upload {...props}>
-    <Button icon={<UploadOutlined />}>Upload</Button>
-  </Upload>
+          <Button icon={<UploadOutlined />}>Upload</Button>
+        </Upload>
       </div>
       <div className="div">
         <Table
-          style={{width: '1000px'}}
+          style={{ width: "1000px" }}
           dataSource={ListUser}
           columns={columns}
         />

@@ -1,5 +1,6 @@
 import {apiUrl} from '../settings/index';
 import axios from 'axios';
+
 const apiUrlConfig = {
   listuser: apiUrl.apiDev + 'users',
   adduser: apiUrl.apiDev + 'users/addUser',
@@ -7,6 +8,7 @@ const apiUrlConfig = {
   edituser: apiUrl.apiDev + 'users/editUser',
   deleteuser: apiUrl.apiDev + 'users/deleteUser',
   uploadfile: apiUrl.apiDev + 'users/uploadFile',
+  dowloadfile: apiUrl.apiDev + 'users/dowloadFile',
 };
 
 const api = {
@@ -21,6 +23,7 @@ const api = {
         'Content-Type': 'multipart/form-data',
       },
     }),
+  dowloadFile: (params) => axios.get(apiUrlConfig.dowloadfile, {...params}),
 };
 
 export default api;

@@ -7,7 +7,7 @@ interface PropsModal {
   visible?: boolean;
   onCreate?: Function;
   onCancel?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  dataEdit: Record<string, any>;
+  dataEdit: any;
 }
 
 const ModalAddEdit: React.FC<PropsModal> = (props) => {

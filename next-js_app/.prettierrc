@@ -1,7 +1,7 @@
 {
     "overrides": [
       {
-        "files": "*.js",
+        "files": "*.ts",
         "options": {
           "arrowParens": "always",
           "singleQuote": true,
