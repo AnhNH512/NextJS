@@ -55,6 +55,9 @@ export default function Home() {
   const handleDowloadFile = () => {
     api.dowloadFile().then((res) => {
       if (res.data.Status === 1) {
+        const a = document.createElement('a')
+        a.href = res.data.Data.downloadLink
+        a.click()
         console.log(res, "res");
       } else {
         errorMessage(res.data.Message);
